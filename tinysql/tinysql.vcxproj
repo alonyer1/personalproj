@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="tests.cpp" />
+    <ClCompile Include="tests.h" />
     <ClCompile Include="tinysql.cpp" />
   </ItemGroup>
   <ItemGroup>

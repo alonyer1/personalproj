@@ -1,9 +1,10 @@
 // tinysql.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#include "tests.h"
 #include <iostream>
 int main()
 {
+	test_table1();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

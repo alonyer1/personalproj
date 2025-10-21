@@ -1,33 +1,28 @@
 #include "Table.h"
 #include <iostream>
 #include <exception>
-void Table::assert_headers(vector<sqlHeader> hdrs)
+void Table::assert_columns(vector<string> columns)
 {
-	for (auto& col : hdrs) {
-		if (headers_set.find(col) == headers_set.end()) {
-			string stype = "INT.";
-			if (col.type == SQL_STR) stype = "STR.";
-			string errmsg = "Table"+table_name+" has no header named" + col.name + " of type " + stype;
-			throw new exception(errmsg.c_str());
+	for (auto& name : columns) {
+		if (headers_map.find(name)== headers_map.end()) {
+			cerr << "Table "<< table_name << " has no header named " << name << ".";
+			throw new exception();
 		}
 	}
 }
 void Table::insert(Row row)
 {
 	for (auto& col : headers) {
-		assert_column_exists(col, row);
+		if (col.type == SQL_INT && row.ints.find(col.name) == row.ints.end()) {
+			string errmsg = "Row missing column " + col.name + " of type INT.";
+			throw new exception(errmsg.c_str());
+		}
+		else if (col.type == SQL_STR && row.strings.find(col.name) == row.strings.end()) {
+			string errmsg = "Row missing column " + col.name + " of type STR.";
+			throw new exception(errmsg.c_str());
+		}
 	}
 	rows.push_back(row);
-}
-static inline void assert_column_exists(const sqlHeader& col, Row& row) {
-	if (col.type == SQL_INT && row.ints.find(col.name) == row.ints.end()) {
-		string errmsg = "Row missing column " + col.name + " of type INT.";
-		throw new exception(errmsg.c_str());
-	}
-	else if (row.strings.find(col.name) == row.strings.end()) {
-		string errmsg = "Row missing column " + col.name + " of type STR.";
-		throw new exception(errmsg.c_str());
-	}
 }
 
 void Table::deleteSTR(string WHERE, string value)
@@ -46,10 +41,9 @@ void Table::deleteINT(string WHERE, int value)
 	}
 }
 
-static Row filter_row(vector<sqlHeader> hdrs, Row& row) {
-	Row new_row;
+static Row filter_row(vector<sqlHeader>& hdrs, Row& row) {
+	Row new_row = {{}, {}};
 	for (auto& col : hdrs) {
-		assert_column_exists(col, row);
 		if (col.type == SQL_STR)
 			new_row.strings.insert(pair<string,string>(col.name,row.strings.at(col.name)));
 		else
@@ -58,30 +52,36 @@ static Row filter_row(vector<sqlHeader> hdrs, Row& row) {
 	return new_row;
 }
 
-Table Table::selectSTR(vector<sqlHeader> hdrs, string WHERE, string value)
+Table Table::select_where(vector<string> columns, string WHERE, string svalue, int ivalue, column_type type)
 {
 	vector<Row> new_rows;
-	for (auto p_row = rows.begin(); p_row != rows.end(); p_row++) {
-		if (p_row->strings[WHERE] == value) {
-			new_rows.push_back(filter_row(hdrs, *p_row));
+	vector<sqlHeader> hdrs;
+	assert_columns(columns);
+	for (string& s : columns) {
+		hdrs.push_back({s, headers_map[s]});
+	}
+	for(Row& row : rows) {
+		if (type == SQL_STR && row.strings[WHERE] == svalue ||
+			type == SQL_INT && row.ints[WHERE] == ivalue) {
+			new_rows.push_back(filter_row(hdrs, row));
 		}
-		else p_row++;
 	}
 	Table new_table = Table("", hdrs);
 	new_table.rows = new_rows;
 	return new_table;
 }
-
-Table Table::selectINT(vector<sqlHeader> hdrs, string WHERE, int value)
+Table Table::select(vector<string> columns)
 {
 	vector<Row> new_rows;
-	for (auto p_row = rows.begin(); p_row != rows.end(); p_row++) {
-		if (p_row->ints[WHERE] == value) {
-			new_rows.push_back(filter_row(hdrs, *p_row));
-		}
-		else p_row++;
+	vector<sqlHeader> hdrs;
+	assert_columns(columns);
+	for (string& s : columns) {
+		hdrs.push_back({s, headers_map[s]});
 	}
-	Table new_table = Table(hdrs);
+	for (Row& row : rows) {
+		new_rows.push_back(filter_row(hdrs, row));
+	}
+	Table new_table = Table("", hdrs);
 	new_table.rows = new_rows;
 	return new_table;
 }
