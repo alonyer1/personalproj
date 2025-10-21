@@ -1,0 +1,10 @@
+Each column has a name and a type.
+It should be possible to copy rows BY VALUE.
+In a select statement, we filter the rows first using the WHERE, and only then we
+filter the columns.
+An entry (row) has maps of strings and of ints separate.
+
+First, just have to be able to create a table using a string,
+to insert, and to print the table.
+
+No, even before the string, we should be able to create and print and add rows.
