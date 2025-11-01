@@ -1,0 +1,10 @@
+CREATE TABLE bananas (color STR, tastiness INT, breed STR)
+CREATE TABLE oranges ()
+CREATE TABLE bananas (color STR, tastiness INT, breed STR)
+INSERT INTO bananas (color, tastiness) VALUES ('Red', 5)
+INSERT INTO bananas (color, breed) VALUES ('Red', 'Potato')
+INSERT INTO bananas (color,tastiness) VALUES ('Yellow', 4)
+INSERT INTO bananas (color, tastiness,breed) VALUES ('Yellow', 20)
+INSERT INTO bananas (tastiness,breed, color) VALUES (20, 'Yellow','delicious')
+SELECT color, tastiness FROM bananas
+SELECT color, breed, breed, tastiness, tastiness FROM bananas WHERE tastiness = 20

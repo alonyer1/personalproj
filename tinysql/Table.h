@@ -19,18 +19,21 @@ typedef struct Row {
 class Table
 {
 private:
-	const string table_name;
 	map<string, column_type> headers_map;
 	const vector<sqlHeader> headers;
 	vector<Row> rows;
 	void assert_columns(vector<string> columns);
 public:
+	const string table_name;
 	Table(const string name, vector<sqlHeader> headers) : table_name(name),headers(headers),headers_map() {
 		for (auto& c : headers) {
 			headers_map.insert({c.name, c.type});
 		}
 	}
 	Table(const Table& other) = default;
+	const vector<sqlHeader> get_headers() {
+		return headers;
+	}
 	void insert(Row row);
 	void delete_where(string WHERE, string svalue, int ivalue, column_type type);
 	Table select(vector<string> columns);

@@ -1,0 +1,15 @@
+CREATE TABLE people (name STR, age INT)
+SELECT name,age FROM people
+INSERT INTO people (name, age) VALUES ('John', 5)
+SELECT name,age FROM people
+INSERT INTO people (name, age) VALUES ('Tim', 6)
+INSERT INTO people (name, age) VALUES ('Tim, 6)
+INSERT INTO people (name, age) VALUES ('Tim', '6')
+INSERT INTO people (name, age) VALUES ('Tim', '6)
+SELECT name,age FROM people
+SELECT name,age FROM people WHERE name = 'Tim'
+SELECT name,age FROM people WHERE name = 'jj'
+SELECT name,age FROM people WHERE name = 'a
+DELETE FROM people
+SELECT name,age FROM people
+DELTE FROM people

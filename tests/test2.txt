@@ -1,0 +1,2 @@
+CREATE TABLE people (name STR, age INT)
+INSERT INTO people (name, age) VALUES ('John', 5)

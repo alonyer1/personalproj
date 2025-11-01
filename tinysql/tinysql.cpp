@@ -1,10 +1,38 @@
 // tinysql.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#include "tests.h"
+
+#include "sqlParser.h"
 #include <iostream>
+#include <fstream>
+#include <regex>
+#define TEST "test3"
+
 int main()
 {
-	test_table1();
+	FILE* file;
+	if (fopen_s(&file, "tests/" TEST ".txt", "r") != 0) {
+		cerr << "Error opening file." << endl;
+	}
+	fstream sfile = fstream(file);
+	sqlParser server = sqlParser();
+	string line;
+	Table* result = NULL;
+	while (getline(sfile, line)) {
+		cout << ">>>>" << line << endl;
+		server.parse(line);
+		result = server.getresult();
+		if (result != NULL) result->print_table();
+	}
+	fclose(file);
+	return 0;
+	
+	//smatch matches;
+	//regex reg("hello (world|banana) yo");
+	//string s = "hello world yo hello banana yo what";
+	//regex_search(s, matches, reg);
+	//cout << matches.suffix().str() << endl;
+	//return 0;
+	
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

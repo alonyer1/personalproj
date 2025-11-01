@@ -29,6 +29,10 @@ void Table::insert(Row row)
 void Table::delete_where(string WHERE, string svalue, int ivalue, column_type type)
 {
 	stack<vector<Row>::const_iterator> to_delete = {};
+	if (WHERE.empty()) {
+		rows = {};
+		return;
+	}
 	for (vector<Row>::iterator p_row = rows.begin(); p_row != rows.end(); p_row++) {
 		if (type == SQL_STR && p_row->strings[WHERE] == svalue ||
 			type == SQL_INT && p_row->ints[WHERE] == ivalue) {
@@ -53,6 +57,7 @@ static Row filter_row(vector<sqlHeader>& hdrs, Row& row) {
 
 Table Table::select_where(vector<string> columns, string WHERE, string svalue, int ivalue, column_type type)
 {
+	if (WHERE.empty()) return select(columns);
 	vector<Row> new_rows;
 	vector<sqlHeader> hdrs;
 	assert_columns(columns);
