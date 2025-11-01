@@ -1,6 +1,7 @@
 #include "Table.h"
 #include <iostream>
 #include <exception>
+#include <stack>
 void Table::assert_columns(vector<string> columns)
 {
 	for (auto& name : columns) {
@@ -25,22 +26,20 @@ void Table::insert(Row row)
 	rows.push_back(row);
 }
 
-void Table::deleteSTR(string WHERE, string value)
+void Table::delete_where(string WHERE, string svalue, int ivalue, column_type type)
 {
-	for (auto p_row = rows.begin(); p_row != rows.end();) {
-		if (p_row->strings[WHERE] == value)	rows.erase(p_row);
-		else p_row++;
+	stack<vector<Row>::const_iterator> to_delete = {};
+	for (vector<Row>::iterator p_row = rows.begin(); p_row != rows.end(); p_row++) {
+		if (type == SQL_STR && p_row->strings[WHERE] == svalue ||
+			type == SQL_INT && p_row->ints[WHERE] == ivalue) {
+			to_delete.push(p_row);
+		}
+	}
+	while (!to_delete.empty()) {
+		rows.erase(to_delete.top());
+		to_delete.pop();
 	}
 }
-
-void Table::deleteINT(string WHERE, int value)
-{
-	for (auto p_row = rows.begin(); p_row != rows.end();) {
-		if (p_row->ints[WHERE] == value) rows.erase(p_row);
-		else p_row++;
-	}
-}
-
 static Row filter_row(vector<sqlHeader>& hdrs, Row& row) {
 	Row new_row = {{}, {}};
 	for (auto& col : hdrs) {
@@ -101,4 +100,14 @@ void Table::print_table()
 		cout << endl;
 	}
 	cout << "------------------------------" << endl;
+}
+
+column_type Table::get_col_type(string col)
+{
+	auto p_type = headers_map.find(col);
+	if (p_type == headers_map.end()) {
+		cerr << "Column '" << col << "' not found in table '" << table_name << "'!";
+		throw;
+	}
+	return p_type->second;
 }

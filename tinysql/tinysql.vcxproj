@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="sqlParser.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="tests.cpp" />
     <ClCompile Include="tests.h" />
     <ClCompile Include="tinysql.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sqlParser.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

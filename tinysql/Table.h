@@ -32,9 +32,9 @@ public:
 	}
 	Table(const Table& other) = default;
 	void insert(Row row);
-	void deleteSTR(string WHERE, string value);
-	void deleteINT(string WHERE, int value);
+	void delete_where(string WHERE, string svalue, int ivalue, column_type type);
 	Table select(vector<string> columns);
 	Table select_where(vector<string> columns, string WHERE, string svalue, int ivalue, column_type type);
 	void print_table();
+	column_type get_col_type(string col);
 };
